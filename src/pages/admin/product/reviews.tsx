@@ -15,7 +15,9 @@ import InlineLoader from 'src/components/common/shared/InlineLoader';
 type reviewType = {
 	active: boolean;
 	createdAt: Date;
-	name: string;
+	user: {
+		email: string;
+	};
 	product: {
 		_id: string;
 		title: string;
@@ -124,7 +126,7 @@ const Reviews = () => {
 														...
 													</td>
 													<td className="py-3">
-														{item.name}
+														{item.user.email}
 													</td>
 													<td className="py-3">
 														{new Date(

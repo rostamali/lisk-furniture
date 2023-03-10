@@ -78,8 +78,8 @@
 
 ### **# Website Preview On YouTube**
 
-[![My Forum Website preview](http://img.youtube.com/vi/SrFEl_XWhoE/0.jpg)](http://www.youtube.com/watch?v=SrFEl_XWhoE)
+[![My Forum Website preview](http://img.youtube.com/vi/MoTQF8J5OZU)](http://www.youtube.com/watch?v=MoTQF8J5OZU)
 
 </br>
 
-## That's all for now. Thanks a lot for visiting My Forum website project.
+## That's all for now. Thanks a lot for visiting My Lisk Furniture Online Store project.

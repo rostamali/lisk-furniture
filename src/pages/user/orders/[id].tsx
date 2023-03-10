@@ -35,7 +35,6 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 		review.id = show.id;
 		mutate(review, {
 			onSuccess: (res) => {
-				console.log(res);
 				setRating(0);
 				setShow({
 					open: false,

@@ -7,10 +7,13 @@ type ProductTabType = {
 	id: string;
 	reviews: [
 		{
-			name: string;
+			user: {
+				userName: string;
+				thumbnail: string;
+			};
 			rating: number;
 			review: string;
-			thumbnail: string;
+			createdAt: Date;
 		},
 	];
 };
@@ -51,8 +54,8 @@ const ProductTab: React.FC<ProductTabType> = ({ description, id, reviews }) => {
 											<div className="user-info flex items-center gap-3">
 												<Picture
 													link={
-														item.thumbnail
-															? `/uploads/${item.thumbnail}`
+														item.user.thumbnail
+															? `/uploads/${item.user.thumbnail}`
 															: '/uploads/user.png'
 													}
 													classList={
@@ -62,7 +65,7 @@ const ProductTab: React.FC<ProductTabType> = ({ description, id, reviews }) => {
 												/>
 												<div className="rating-info">
 													<p className="name text-base font-bold text-[#222] capitalize">
-														{item.name}
+														{item.user.userName}
 													</p>
 													<div className="flex items-center text-sm font-bold text-black gap-2 mt-2">
 														<Ratings

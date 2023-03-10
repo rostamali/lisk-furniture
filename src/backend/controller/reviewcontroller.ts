@@ -39,10 +39,10 @@ export const getReviews = CatchAsync(
 		const skip =
 			(parseInt(page as string, 10) - 1) * parseInt(limit as string, 10);
 		const reviews = await Review.find({})
-			.select('-__v -user -updatedAt -thumbnail')
+			.select('-__v -updatedAt -thumbnail')
 			.populate({
-				path: 'product',
-				select: 'title thumbnail',
+				path: 'product user',
+				select: 'title thumbnail email userName',
 			})
 			.skip(skip)
 			.limit(parseInt(limit as string, 10));

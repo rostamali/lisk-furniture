@@ -301,7 +301,11 @@ export const getSingleProductBySlug = CatchAsync(
 			product: product._id,
 			active: { $ne: false },
 		})
-			.select('-user -updatedAt -product -createdAt -active -__v')
+			.select('rating review user createdAt')
+			.populate({
+				path: 'user',
+				select: 'userName thumbnail				',
+			})
 			.sort({ createdAt: -1 });
 
 		const sum = reviews.reduce((acc, rating) => acc + rating.rating, 0);

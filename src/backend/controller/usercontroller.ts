@@ -82,10 +82,10 @@ export const signinUser = CatchAsync(
 				status: 'fail',
 				message: 'Invalid Data',
 			});
-		const user = await User.findOne({ email }).select(
-			'userName _id email thumbnail role password active',
-		);
-		if (!user.active) throw new Error('Account not active');
+		const user = await User.findOne({
+			email,
+			active: { $ne: false },
+		}).select('userName _id email thumbnail role password active');
 
 		if (!user || !(await bcrypt.compare(password, user.password))) {
 			res.status(400).json({
