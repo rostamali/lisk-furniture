@@ -78,7 +78,7 @@
 
 ### **# Website Preview On YouTube**
 
-[![My Forum Website preview](http://img.youtube.com/vi/MoTQF8J5OZU)](http://www.youtube.com/watch?v=MoTQF8J5OZU)
+[![My Forum Website preview](http://img.youtube.com/vi/MoTQF8J5OZU/0.jpg)](http://www.youtube.com/watch?v=MoTQF8J5OZU)
 
 </br>
 
