@@ -8,6 +8,7 @@ import { useFetchData, useUpdateData } from 'src/hooks/useApi';
 import { handleUpdateConfirm } from 'src/utils/confirmation';
 import Head from 'next/head';
 import { ReactElement } from 'react';
+import { useForm } from 'react-hook-form';
 
 const OrderDetails = ({ id }: { id: string }) => {
 	const { data: details, isLoading } = useFetchData(
@@ -17,20 +18,20 @@ const OrderDetails = ({ id }: { id: string }) => {
 	);
 	const { mutate: updateOrderStatus, isLoading: orderUpdating } =
 		useUpdateData(id);
-
-	const handleUpdateStatus = (OId: string) => {
+	const { register, handleSubmit } = useForm();
+	const onSubmit = handleSubmit(async (st) => {
 		handleUpdateConfirm(
 			'Are you sure ?',
 			'Order status will be updated!',
 		).then((result) => {
 			if (result.isConfirmed) {
 				updateOrderStatus({
-					url: `/api/order/status/${OId}`,
-					body: {},
+					url: `/api/order/status/${details.data._id}`,
+					body: { status: st.status },
 				});
 			}
 		});
-	};
+	});
 	return (
 		<>
 			<Head>
@@ -167,12 +168,14 @@ const OrderDetails = ({ id }: { id: string }) => {
 								<h4 className="capitalize text-black text-xl font-bold">
 									User Info.
 								</h4>
-								<div className="">
+								<form onSubmit={onSubmit} id="status">
 									<select
-										className={`${details.data.status} border-0 text-white focus:border-0 focus:ring-0 rounded-md text-sm`}
+										className={`border text-black focus:ring-0 rounded-md text-sm`}
 										defaultValue={details.data.status}
+										{...register('status')}
 									>
-										<option value="rocessing">
+										<option value="">Select Status</option>
+										<option value="processing">
 											Processing
 										</option>
 										<option value="packed">Packed</option>
@@ -181,7 +184,7 @@ const OrderDetails = ({ id }: { id: string }) => {
 											Delivered
 										</option>
 									</select>
-								</div>
+								</form>
 							</div>
 							<div className="flex flex-col gap-3 mb-4">
 								<span className="text-base capitalize font-bold text-black">
@@ -239,13 +242,14 @@ const OrderDetails = ({ id }: { id: string }) => {
 							{
 								<button
 									className="submit__btn w-full mt-6 h-[53px]"
-									onClick={() => handleUpdateStatus(id)}
+									type="submit"
+									form="status"
 									disabled={orderUpdating}
 								>
 									{orderUpdating ? (
 										<ButtonLoader />
 									) : (
-										`Update Status`
+										'Update Status'
 									)}
 								</button>
 							}

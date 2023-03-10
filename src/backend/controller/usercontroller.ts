@@ -225,9 +225,11 @@ export const adminDeleteUser = CatchAsync(
 		const { id } = req.params;
 		if (req.user._id === id)
 			throw new Error('Current account is not deletable');
-		const deleteUser = await User.findById(id);
+		const deleteUser = await User.findOne({
+			_id: id,
+			active: { $ne: false },
+		}).select('active');
 		if (!deleteUser) throw new Error('Invalid User');
-		if (!deleteUser.active) throw new Error('Account already deleted');
 		deleteUser.active = false;
 		await deleteUser.save();
 		res.status(200).json({

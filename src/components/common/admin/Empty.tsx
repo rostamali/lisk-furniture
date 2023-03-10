@@ -2,7 +2,7 @@ import { MdOutlineHourglassEmpty } from 'react-icons/md';
 const Empty = ({ text }: { text: string }) => {
 	return (
 		<>
-			<div className="flex items-center justify-center flex-col gap-6 min-h-[60vh]">
+			<div className="flex flex-col items-start gap-4 mt-8">
 				<div className="bg-orange-dark h-14 w-14 rounded-full flex items-center justify-center">
 					<MdOutlineHourglassEmpty className="text-3xl text-[#fff] animate-spin" />
 				</div>

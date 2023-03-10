@@ -2,14 +2,6 @@ import { Schema, model, models } from 'mongoose';
 
 export const reviewSchema = new Schema(
 	{
-		name: {
-			type: String,
-			required: [true, 'User must have name'],
-			trim: true,
-		},
-		thumbnail: {
-			type: String,
-		},
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',

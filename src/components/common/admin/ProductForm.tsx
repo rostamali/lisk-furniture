@@ -41,7 +41,6 @@ const ProductForm = ({ category }: { category: ProductCategory[] }) => {
 		if (!data.name) return toast.error('Name is required');
 		createProduct(data);
 	};
-	console.log(errors);
 	return (
 		<>
 			<div className="product-form">

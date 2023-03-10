@@ -11,6 +11,7 @@ import {
 	getProducts,
 	getSingleProduct,
 	getSingleProductBySlug,
+	shopProducts,
 	updateProduct,
 } from 'src/backend/controller/productcontroller';
 import { authorized, restictUser } from 'src/backend/controller/usercontroller';
@@ -22,6 +23,7 @@ router
 		await next();
 	})
 	.get('/api/product/all', getProducts)
+	.get('/api/product/shop', shopProducts)
 	.get('/api/product/single/:id', getSingleProduct)
 	.get('/api/product/single/details/:slug', getSingleProductBySlug)
 	.get('/api/product/homeproduct', getHomeProduct)

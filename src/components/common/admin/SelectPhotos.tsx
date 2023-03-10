@@ -129,7 +129,7 @@ const SelectPhotos: React.FC<SelectPhotosType> = ({
 																	<Picture
 																		link={`/uploads/${item.name}`}
 																		classList={
-																			'w-[60%] h-[220px] rounded-2xl mx-auto'
+																			'h-[200px] rounded-2xl mx-auto'
 																		}
 																		alt={
 																			'Photo Gallery'

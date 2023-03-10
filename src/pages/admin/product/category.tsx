@@ -4,7 +4,6 @@ import Picture from 'src/components/common/shared/Picture';
 import SelectPhotos from 'src/components/common/admin/SelectPhotos';
 import AdminAuthLayout from 'src/components/layouts/AdminAuthLayout';
 import { ReactElement, useEffect, useState } from 'react';
-import { HiEye } from 'react-icons/hi';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { useForm } from 'react-hook-form';
 import {
@@ -130,23 +129,13 @@ const CategoryPage = () => {
 				/>
 			</Head>
 			<div className="product-category">
-				<div className="pb-8 flex items-center justify-between">
-					<div>
-						<AdminPageTitle
-							title={'Categorys'}
-							subtitle={'Admin / Product / Category'}
-						/>
-					</div>
-					<div className="flex  items-center gap-3">
-						<input
-							type="text"
-							placeholder="Search by name..."
-							className="input__field"
-						/>
-						<button className="submit__btn">Search</button>
-					</div>
+				<div>
+					<AdminPageTitle
+						title={'Categorys'}
+						subtitle={'Admin / Product / Category'}
+					/>
 				</div>
-				<div className="">
+				<div className="mt-8">
 					<div className="grid grid-cols-3 gap-8">
 						<div className="bg-white p-10 rounded-lg flex flex-col gap-4">
 							<form onSubmit={onSubmit}>
@@ -270,138 +259,143 @@ const CategoryPage = () => {
 								<div className="flex h-[60vh] items-center justify-center">
 									<Spinner />
 								</div>
-							) : category.data.length > 0 ? (
-								<>
-									<table className="w-full border-collapse">
-										<thead className="bg-[#F0F1FF] border border-[#F0F1FF]">
-											<tr>
-												<th className="text-left py-3 pl-3">
-													<input
-														type="checkbox"
-														name=""
-														id=""
-													/>
-												</th>
-												<th className="text-left py-3">
-													Image
-												</th>
-												<th className="text-left py-3">
-													Name
-												</th>
-												<th className="text-left py-3">
-													Parent
-												</th>
-												<th className="text-left py-3">
-													Qty
-												</th>
-												<th className="text-center py-3 pr-3">
-													Action
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{category.data.map(
-												(
-													item: CategoryType,
-													index: number,
-												) => (
-													<tr
-														className="border border-[#F0F1FF] mb-2"
-														style={{
-															marginBottom:
-																'10px',
-														}}
-														key={index}
-													>
-														<td className="pl-3">
-															<input
-																type="checkbox"
-																name=""
-																id=""
-															/>
-														</td>
-														<td className="py-2">
-															<Picture
-																link={
-																	item.thumbnail
-																		? `/uploads/${item.thumbnail}`
-																		: '/uploads/placeholder.png'
-																}
-																classList={
-																	'h-[45px] w-[45px] rounded-lg'
-																}
-																alt={''}
-															/>
-														</td>
-														<td className="capitalize">
-															{item.title}
-														</td>
-														<td>
-															{item.parent &&
-																item.parent
-																	.title}
-														</td>
-														<td>
-															{item.products
-																.length
-																? item.products
-																		.length
-																: 0}
-														</td>
-														<td className="pr-3">
-															<div className="flex items-center gap-2 justify-center">
-																<button
-																	className="action__view"
-																	onClick={() =>
-																		setEdit(
-																			{
-																				status: true,
-																				id: item._id,
-																				title: item.title,
-																				thumbnail:
-																					item.thumbnail,
-																				parent: item.parent
-																					? item
-																							.parent
-																							._id
-																					: 'default',
-																				description:
-																					item.description,
-																			},
-																		)
+							) : category.status === 'success' ? (
+								category.data.length > 0 ? (
+									<>
+										<table className="w-full border-collapse">
+											<thead className="bg-[#F0F1FF] border border-[#F0F1FF]">
+												<tr>
+													<th className="text-left py-3 pl-3">
+														<input
+															type="checkbox"
+															name=""
+															id=""
+														/>
+													</th>
+													<th className="text-left py-3">
+														Image
+													</th>
+													<th className="text-left py-3">
+														Name
+													</th>
+													<th className="text-left py-3">
+														Parent
+													</th>
+													<th className="text-left py-3">
+														Qty
+													</th>
+													<th className="text-center py-3 pr-3">
+														Action
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{category.data.map(
+													(
+														item: CategoryType,
+														index: number,
+													) => (
+														<tr
+															className="border border-[#F0F1FF] mb-2"
+															style={{
+																marginBottom:
+																	'10px',
+															}}
+															key={index}
+														>
+															<td className="pl-3">
+																<input
+																	type="checkbox"
+																	name=""
+																	id=""
+																/>
+															</td>
+															<td className="py-2">
+																<Picture
+																	link={
+																		item.thumbnail
+																			? `/uploads/${item.thumbnail}`
+																			: '/uploads/placeholder.png'
 																	}
-																>
-																	<FiEdit className="text-[#000] text-base" />
-																</button>
-																<button
-																	className="action__delete"
-																	onClick={() =>
-																		handleDeleteCategory(
-																			item._id,
-																		)
+																	classList={
+																		'h-[45px] w-[45px] rounded-lg'
 																	}
-																>
-																	<RiDeleteBin5Line className="text-[#000] text-base" />
-																</button>
-															</div>
-														</td>
-													</tr>
-												),
-											)}
-										</tbody>
-									</table>
-									{category.pages > 1 && (
-										<div className="flex items-center justify-end pt-8">
-											<CustomPagination
-												currentpage={
-													category.currentPage
-												}
-												totalPage={category.pages}
-												handler={setPage}
-											/>
-										</div>
-									)}
-								</>
+																	alt={''}
+																/>
+															</td>
+															<td className="capitalize">
+																{item.title}
+															</td>
+															<td>
+																{item.parent &&
+																	item.parent
+																		.title}
+															</td>
+															<td>
+																{item.products
+																	.length
+																	? item
+																			.products
+																			.length
+																	: 0}
+															</td>
+															<td className="pr-3">
+																<div className="flex items-center gap-2 justify-center">
+																	<button
+																		className="action__view"
+																		onClick={() =>
+																			setEdit(
+																				{
+																					status: true,
+																					id: item._id,
+																					title: item.title,
+																					thumbnail:
+																						item.thumbnail,
+																					parent: item.parent
+																						? item
+																								.parent
+																								._id
+																						: 'default',
+																					description:
+																						item.description,
+																				},
+																			)
+																		}
+																	>
+																		<FiEdit className="text-[#000] text-base" />
+																	</button>
+																	<button
+																		className="action__delete"
+																		onClick={() =>
+																			handleDeleteCategory(
+																				item._id,
+																			)
+																		}
+																	>
+																		<RiDeleteBin5Line className="text-[#000] text-base" />
+																	</button>
+																</div>
+															</td>
+														</tr>
+													),
+												)}
+											</tbody>
+										</table>
+										{category.pages > 1 && (
+											<div className="flex items-center justify-end pt-8">
+												<CustomPagination
+													currentpage={
+														category.currentPage
+													}
+													totalPage={category.pages}
+													handler={setPage}
+												/>
+											</div>
+										)}
+									</>
+								) : (
+									<Empty text={'No Category Exist'} />
+								)
 							) : (
 								<Empty text={'No Category Exist'} />
 							)}

@@ -12,6 +12,24 @@ export const useFetchData = (url: string, key: string, page: number) => {
 		},
 	});
 };
+
+export const useShopFetchData = (
+	url: string,
+	key: string,
+	page: number,
+	filter: string,
+	sort: string,
+) => {
+	return useQuery([key, page, filter, sort], () => ApiService.getAll(url), {
+		keepPreviousData: true,
+		staleTime: 5000,
+		onSuccess: (data: any) => {},
+		onError: (err: any) => {
+			toast.error(err.response.data.message);
+		},
+	});
+};
+
 export const useCreateData = (url: string, key: string) => {
 	const queryClient = useQueryClient();
 	return useMutation(

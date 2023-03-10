@@ -119,9 +119,7 @@ const Footer = () => {
 							<Picture
 								link={'/assets/icons/payment.svg'}
 								alt={'Payment icon'}
-								classList={
-									'mt-3 w-full lg:h-4 md:h-8 sm:h-6 h-4'
-								}
+								classList={'mt-3 w-full '}
 							/>
 							<p className="text-gray-dark text-sm font-light mt-7">
 								Copyright by Md Rostam Ali

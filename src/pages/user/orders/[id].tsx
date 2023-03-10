@@ -2,10 +2,15 @@ import Empty from 'src/components/common/admin/Empty';
 import Picture from 'src/components/common/shared/Picture';
 import Spinner from 'src/components/common/shared/Spinner';
 import UserAuthLayout from 'src/components/layouts/UserAuthLayout';
-import { useFetchData } from 'src/hooks/useApi';
+import { useCreateData, useFetchData } from 'src/hooks/useApi';
 import Head from 'next/head';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { FaDownload } from 'react-icons/fa';
+import { useForm } from 'react-hook-form';
+import { Modal } from 'flowbite-react';
+import StarRatings from 'react-star-ratings';
+import { MdRateReview } from 'react-icons/md';
+import ButtonLoader from 'src/components/common/shared/ButtonLoader';
 
 const UserOrderDetails = ({ id }: { id: string }) => {
 	const { data: details, isLoading } = useFetchData(
@@ -13,7 +18,34 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 		id,
 		1,
 	);
-	console.log(details);
+	// write review
+	const [rating, setRating] = useState(0);
+	const [show, setShow] = useState({
+		open: false,
+		id: '',
+	});
+	const { mutate, isLoading: isCreating } = useCreateData(
+		'/api/review/create',
+		'',
+	);
+	const { register, handleSubmit, setValue, reset } = useForm({
+		mode: 'onChange',
+	});
+	const onSubmit = handleSubmit(async (review) => {
+		review.id = show.id;
+		mutate(review, {
+			onSuccess: (res) => {
+				console.log(res);
+				setRating(0);
+				setShow({
+					open: false,
+					id: '',
+				});
+				reset();
+			},
+		});
+	});
+
 	return (
 		<>
 			<Head>
@@ -29,7 +61,7 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			{isLoading ? (
-				''
+				<Spinner />
 			) : details.status === 'success' ? (
 				<div className="user-order-details">
 					<h3 className="user-page-title">
@@ -45,12 +77,27 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 								<th className="text-left py-3">Name</th>
 								<th className="text-left py-3">Price</th>
 								<th className="text-center py-3">QTY</th>
-								<th className="text-center py-3 pr-3">Total</th>
+								<th className="text-center py-3">Total</th>
+								<th className="text-center py-3 pr-3">
+									Review
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							{details.data.ordersItems.map(
-								(item: any, index: number) => (
+								(
+									item: {
+										id: {
+											_id: string;
+											title: string;
+											thumbnail: string;
+											salePrice: number;
+										};
+										price: number;
+										qty: number;
+									},
+									index: number,
+								) => (
 									<tr
 										className="border border-[#F0F1FF] mb-2"
 										style={{
@@ -75,6 +122,19 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 										<td className="text-center">
 											$
 											{(item.price * item.qty).toFixed(2)}
+										</td>
+										<td className="">
+											<button
+												className="action__delete mx-auto"
+												onClick={() =>
+													setShow({
+														open: true,
+														id: item.id._id,
+													})
+												}
+											>
+												<MdRateReview className="text-[#000] text-base" />
+											</button>
 										</td>
 									</tr>
 								),
@@ -163,6 +223,70 @@ const UserOrderDetails = ({ id }: { id: string }) => {
 			) : (
 				<Empty text={'Invalid Order Number'} />
 			)}
+			<Modal
+				show={show.open}
+				size="md"
+				popup={true}
+				onClose={() =>
+					setShow({
+						...show,
+						open: false,
+					})
+				}
+			>
+				<Modal.Header />
+				<Modal.Body>
+					<form onSubmit={onSubmit}>
+						<div className="p-4">
+							<h3 className="text-xl font-bold mb-8">
+								Write Your Review
+							</h3>
+							<div className="input__group mb-4">
+								<label
+									htmlFor="star-ratings"
+									className="input__label"
+								>
+									Rating
+								</label>
+								<StarRatings
+									rating={rating}
+									changeRating={(val) => [
+										setRating(val),
+										setValue('rating', val),
+									]}
+									starRatedColor="#FAAD3D"
+									starDimension="20px"
+									starSpacing="5px"
+									starHoverColor="#FAAD3D"
+								/>
+							</div>
+							<div className="input__group">
+								<label
+									htmlFor="review"
+									className="input__label"
+								>
+									Review
+								</label>
+								<textarea
+									{...register('review')}
+									id="review"
+									className="input__field w-full h-[120px] rounded-md"
+								></textarea>
+							</div>
+							<button
+								disabled={isCreating}
+								className="w-full bg-[#FAAD3D] text-white h-[50px] rounded-md text-lg mt-5"
+							>
+								{isCreating ? (
+									<ButtonLoader />
+								) : (
+									'Submit Review'
+								)}
+							</button>
+						</div>
+					</form>
+				</Modal.Body>
+			</Modal>
 		</>
 	);
 };

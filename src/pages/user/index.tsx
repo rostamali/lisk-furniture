@@ -3,13 +3,13 @@ import Head from 'next/head';
 import { ReactElement } from 'react';
 import { FiPackage } from 'react-icons/fi';
 import { GrCart } from 'react-icons/gr';
-import { HiOutlineUser } from 'react-icons/hi';
 import { MdReviews } from 'react-icons/md';
 import { FaChevronUp } from 'react-icons/fa';
 import { BiPlus } from 'react-icons/bi';
 import { useFetchData } from '../../hooks/useApi';
 import { AiOutlineDollarCircle } from 'react-icons/ai';
 import Link from 'next/link';
+import Spinner from 'src/components/common/shared/Spinner';
 
 const UserDashboard = () => {
 	const { data: userInfo, isLoading } = useFetchData(
@@ -99,51 +99,55 @@ const UserDashboard = () => {
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<div className="user-dashboard">
-				<h3 className="user-page-title">User Dashboard</h3>
-				<div className="user-stat grid grid-cols-2 gap-5">
-					{Info.map((item, index) => (
-						<div
-							className="single-box bg-white p-4 rounded-md border"
-							key={index}
-							style={{
-								boxShadow: `0px 10px 10px #EAEDF7`,
-							}}
-						>
-							<div className="flex items-center justify-between">
-								<h5 className="text-[#C0C0C0] uppercase text-base font-semibold">
-									{item.title}
-								</h5>
-								<div className="flex items-center text-[#29692C] gap-2">
-									<FaChevronUp className="text-base font-bold" />
-									<span className="text-base font-bold flex items-center">
-										<BiPlus />
-										{item.percent}%
+			{isLoading ? (
+				<Spinner />
+			) : (
+				<div className="user-dashboard">
+					<h3 className="user-page-title">User Dashboard</h3>
+					<div className="user-stat grid grid-cols-2 gap-5">
+						{Info.map((item, index) => (
+							<div
+								className="single-box bg-white p-4 rounded-md border"
+								key={index}
+								style={{
+									boxShadow: `0px 10px 10px #EAEDF7`,
+								}}
+							>
+								<div className="flex items-center justify-between">
+									<h5 className="text-[#C0C0C0] uppercase text-base font-semibold">
+										{item.title}
+									</h5>
+									<div className="flex items-center text-[#29692C] gap-2">
+										<FaChevronUp className="text-base font-bold" />
+										<span className="text-base font-bold flex items-center">
+											<BiPlus />
+											{item.percent}%
+										</span>
+									</div>
+								</div>
+								<h3 className="text-black text-4xl font-normal py-4">
+									{item.value}
+								</h3>
+								<div className="flex items-center justify-between">
+									<Link
+										href={item.link}
+										className="text-sm text-black font-medium underline"
+									>
+										{item.linkLabel}
+									</Link>
+									<span
+										className={`h-8 w-8 rounded-md flex items-center justify-center ${item.iconBg}`}
+									>
+										<item.icon
+											className={`text-lg ${item.iconColor}`}
+										/>
 									</span>
 								</div>
 							</div>
-							<h3 className="text-black text-4xl font-normal py-4">
-								{item.value}
-							</h3>
-							<div className="flex items-center justify-between">
-								<Link
-									href={item.link}
-									className="text-sm text-black font-medium underline"
-								>
-									{item.linkLabel}
-								</Link>
-								<span
-									className={`h-8 w-8 rounded-md flex items-center justify-center ${item.iconBg}`}
-								>
-									<item.icon
-										className={`text-lg ${item.iconColor}`}
-									/>
-								</span>
-							</div>
-						</div>
-					))}
+						))}
+					</div>
 				</div>
-			</div>
+			)}
 		</>
 	);
 };

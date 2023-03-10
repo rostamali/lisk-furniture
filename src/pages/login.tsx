@@ -32,6 +32,7 @@ const Login = () => {
 		reset,
 	} = useForm({
 		resolver: yupResolver(signinValidation),
+		mode: 'onChange',
 	});
 	const { mutate: signin, isLoading } = useCreateData(
 		'/api/auth/signin',
@@ -41,36 +42,34 @@ const Login = () => {
 	const onSubmit = handleSubmit(async (user) => {
 		signin(user, {
 			onSuccess: (res) => {
-				if (router.asPath === '/login') {
-					if (res.role === 'admin') {
-						router.push('/admin');
+				if (res.role === 'admin') {
+					if (router.asPath.startsWith('/admin')) {
+						setTimeout(() => {
+							router.reload();
+						}, 1200);
 					} else {
-						router.push('/user');
+						setTimeout(() => {
+							router.push('/admin');
+						}, 1200);
+					}
+				} else if (res.role === 'user') {
+					if (
+						router.asPath.startsWith('/user') ||
+						router.asPath.startsWith('/cart') ||
+						router.asPath.startsWith('/checkout')
+					) {
+						setTimeout(() => {
+							router.reload();
+						}, 1200);
+					} else {
+						setTimeout(() => {
+							router.push('/user');
+						}, 1200);
 					}
 				} else {
-					if (
-						router.asPath.startsWith('/admin') &&
-						res.role === 'admin'
-					) {
-						router.push(router.asPath);
-					} else if (
-						router.asPath.startsWith('/user') &&
-						res.role === 'user'
-					) {
-						router.push(router.asPath);
-					} else if (
-						router.asPath.startsWith('/user') &&
-						res.role === 'admin'
-					) {
-						router.push('/admin');
-					} else if (
-						router.asPath.startsWith('/admin') &&
-						res.role === 'user'
-					) {
-						router.push('/user');
-					} else {
+					setTimeout(() => {
 						router.push('/');
-					}
+					}, 1200);
 				}
 				reset();
 			},
@@ -94,7 +93,7 @@ const Login = () => {
 			<div id="auth" className="bg-[#EAEDF7]">
 				<div className="container mx-auto font-mulish">
 					<div className="h-screen flex items-center">
-						<div className="lg:w-2/4 md:w-2/3 mx-auto bg-white md:p-12 p-8">
+						<div className="lg:w-[40%] md:w-2/3 mx-auto bg-white md:p-12 p-8">
 							<div className="flex items-center justify-center pb-6">
 								<Link href="/">
 									<Logo color={'#000'} />

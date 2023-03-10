@@ -35,6 +35,57 @@ export const getProducts = CatchAsync(
 		});
 	},
 );
+export const shopProducts = CatchAsync(
+	async (req: NextApiRequestExtended, res: NextApiResponse) => {
+		const { select, limit = 9, page = 1, s, cat, sort = 1 } = req.query;
+		const selectedData = (select ? (select as string) : '-__v,-updatedAt')
+			.split(',')
+			.join(' ');
+		const skip =
+			(parseInt(page as string, 10) - 1) * parseInt(limit as string, 10);
+		const query: any = {};
+		if (s) {
+			query.title = { $regex: s, $options: 'i' };
+		}
+		if (cat) {
+			query.category = cat;
+		}
+		if (req.query.min) {
+			query.salePrice = { $gte: req.query.min };
+		}
+		if (req.query.max) {
+			query.salePrice = { ...query.salePrice, $lte: req.query.max };
+		}
+		const products = await Product.find(query)
+			.select(select ? selectedData : '-__v')
+			.populate({
+				path: 'category',
+				select: 'title',
+			})
+			.sort({
+				salePrice: parseInt(sort as string) === 1 ? 1 : -1,
+			})
+			.skip(skip)
+			.limit(parseInt(limit as string, 10));
+
+		const totalPost = await Product.countDocuments(query);
+
+		const categorys = await Category.find({}).select('_id title').populate({
+			path: 'parent',
+			model: 'Category',
+			select: '_id title',
+		});
+
+		res.status(200).json({
+			status: 'success',
+			pages: Math.ceil(totalPost / parseInt(limit as string, 10)),
+			currentPage: parseInt(page as string),
+			totalProducts: totalPost,
+			data: products,
+			categorys,
+		});
+	},
+);
 export const createProduct = CatchAsync(
 	async (req: NextApiRequestExtended, res: NextApiResponse) => {
 		const {
@@ -246,7 +297,10 @@ export const getSingleProductBySlug = CatchAsync(
 			.exec();
 		if (!product) throw new Error('Invalid Product ID');
 
-		const reviews = await Review.find({ product: product._id })
+		const reviews = await Review.find({
+			product: product._id,
+			active: { $ne: false },
+		})
 			.select('-user -updatedAt -product -createdAt -active -__v')
 			.sort({ createdAt: -1 });
 

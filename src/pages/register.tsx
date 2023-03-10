@@ -34,7 +34,7 @@ const Register = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ resolver: yupResolver(signupValidation) });
+	} = useForm({ resolver: yupResolver(signupValidation), mode: 'onChange' });
 	const { mutate: signup, isLoading } = useCreateData(
 		'/api/auth/signup',
 		'auth',
@@ -64,7 +64,7 @@ const Register = () => {
 			<div id="auth" className="bg-[#EAEDF7]">
 				<div className="container mx-auto font-mulish">
 					<div className="h-screen flex items-center">
-						<div className="lg:w-2/4 md:w-2/3 mx-auto bg-white md:p-12 p-8">
+						<div className="lg:w-[40%] md:w-2/3 mx-auto bg-white md:p-12 p-8">
 							<div className="flex items-center justify-center pb-6">
 								<Link href="/">
 									<Logo color={'#000'} />

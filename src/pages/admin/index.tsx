@@ -114,10 +114,8 @@ const Dashboard = () => {
 				/>
 			</Head>
 			{isLoading ? (
-				<div className="bg-white flex items-center justify-center h-[70vh] rounded-md">
-					<Spinner />
-				</div>
-			) : dashboardInfo.status === 'success' ? (
+				<Spinner />
+			) : (
 				<div className="admin-dashboard">
 					<div className="pb-8">
 						<AdminPageTitle
@@ -125,158 +123,174 @@ const Dashboard = () => {
 							subtitle={'Dashboard'}
 						/>
 					</div>
-					<div className="grid grid-cols-4 gap-6">
-						{Info.map((item, index) => (
-							<div
-								className="single-box bg-white p-4 rounded-md"
-								key={index}
-							>
-								<div className="flex items-center justify-between">
-									<h5 className="text-[#C0C0C0] uppercase text-base font-semibold">
-										{item.title}
-									</h5>
-									<div className="flex items-center text-[#29692C] gap-2">
-										<FaChevronUp className="text-base font-bold" />
-										<span className="text-base font-bold flex items-center">
-											<BiPlus />
-											{item.percent}%
-										</span>
-									</div>
-								</div>
-								<h3 className="text-black text-4xl font-normal py-4">
-									{item.value}
-								</h3>
-								<div className="flex items-center justify-between">
-									<Link
-										href={item.link}
-										className="text-sm text-black font-medium underline"
+					{dashboardInfo.status === 'success' ? (
+						<>
+							<div className="grid grid-cols-4 gap-6">
+								{Info.map((item, index) => (
+									<div
+										className="single-box bg-white p-4 rounded-md"
+										key={index}
 									>
-										{item.linkLabel}
-									</Link>
-									<span
-										className={`h-8 w-8 rounded-md flex items-center justify-center ${item.iconBg}`}
-									>
-										<item.icon
-											className={`text-lg ${item.iconColor}`}
-										/>
-									</span>
-								</div>
-							</div>
-						))}
-					</div>
-					<div className="latest-transaction bg-white p-10 rounded-md mt-6">
-						<h3 className="text-black text-lg font-semibold pb-5">
-							Latest Trasactions
-						</h3>
-						{dashboardInfo.data.length > 0 ? (
-							<table className="w-full border-collapse">
-								<thead className="bg-[#F0F1FF] border border-[#F0F1FF]">
-									<tr>
-										<th className="text-left py-3 pl-3">
-											Order ID
-										</th>
-										<th className="text-left py-3">
-											Customer
-										</th>
-										<th className="text-left py-3">Date</th>
-										<th className="text-left py-3">
-											Amount
-										</th>
-										<th className="py-3 text-center">
-											Payment Method
-										</th>
-										<th className="text-center py-3 pr-3">
-											Status
-										</th>
-									</tr>
-								</thead>
-								<tbody>
-									{dashboardInfo.data.map(
-										(item: PaymentList, index: number) => (
-											<tr
-												className="border border-[#F0F1FF] mb-2"
-												style={{
-													marginBottom: '10px',
-												}}
-												key={index}
+										<div className="flex items-center justify-between">
+											<h5 className="text-[#C0C0C0] uppercase text-base font-semibold">
+												{item.title}
+											</h5>
+											<div className="flex items-center text-[#29692C] gap-2">
+												<FaChevronUp className="text-base font-bold" />
+												<span className="text-base font-bold flex items-center">
+													<BiPlus />
+													{item.percent}%
+												</span>
+											</div>
+										</div>
+										<h3 className="text-black text-4xl font-normal py-4">
+											{item.value}
+										</h3>
+										<div className="flex items-center justify-between">
+											<Link
+												href={item.link}
+												className="text-sm text-black font-medium underline"
 											>
-												<td className="py-2 pl-3">
-													{item.orderId._id}
-												</td>
-												<td className="py-2">
-													<div className="flex items-center gap-4">
-														<Picture
-															link={
-																item.user
-																	.thumbnail
-																	? `/uploads/${item.user.thumbnail}`
-																	: '/uploads/user.png'
-															}
-															classList={
-																'h-[45px] w-[45px] rounded-full'
-															}
-															alt={
-																item.user
-																	.firstName
-																	? `${item.user.firstName} ${item.user.lastName}`
-																	: item.user
-																			.userName
-															}
-														/>
-														<span>
-															{item.user.firstName
-																? `${item.user.firstName} ${item.user.lastName}`
-																: item.user
-																		.userName}
-														</span>
-													</div>
-												</td>
-												<td>
-													{new Date(
-														item.createdAt,
-													).toLocaleString('en-US', {
-														timeZone: 'UTC',
-														weekday: 'short',
-														year: 'numeric',
-														month: 'short',
-														day: 'numeric',
-													})}
-												</td>
-												<td className="capitalize">
-													{item.orderId.total
-														? `$${item.orderId.total.toFixed(
-																2,
-														  )}`
-														: 0.0}
-												</td>
-												<td className="capitalize text-center">
-													{item.paymentMethod}
-												</td>
-												<td className="text-center capitalize">
-													<span
-														className={`${
-															item.status ===
-															'success'
-																? 'bg-[#D7EDD4] text-[#5E8460]'
-																: 'bg-[#F3EFD7] text-[#C5B585]'
-														}  text-sm py-1 px-2 rounded-md`}
-													>
-														{item.status}
-													</span>
-												</td>
+												{item.linkLabel}
+											</Link>
+											<span
+												className={`h-8 w-8 rounded-md flex items-center justify-center ${item.iconBg}`}
+											>
+												<item.icon
+													className={`text-lg ${item.iconColor}`}
+												/>
+											</span>
+										</div>
+									</div>
+								))}
+							</div>
+							{dashboardInfo.data.length > 0 && (
+								<div className="latest-transaction bg-white p-10 rounded-md mt-6">
+									<h3 className="text-black text-lg font-semibold pb-5">
+										Latest Trasactions
+									</h3>
+									<table className="w-full border-collapse">
+										<thead className="bg-[#F0F1FF] border border-[#F0F1FF]">
+											<tr>
+												<th className="text-left py-3 pl-3">
+													Order ID
+												</th>
+												<th className="text-left py-3">
+													Customer
+												</th>
+												<th className="text-left py-3">
+													Date
+												</th>
+												<th className="text-left py-3">
+													Amount
+												</th>
+												<th className="py-3 text-center">
+													Payment Method
+												</th>
+												<th className="text-center py-3 pr-3">
+													Status
+												</th>
 											</tr>
-										),
-									)}
-								</tbody>
-							</table>
-						) : (
-							<Empty text={'No Item Found'} />
-						)}
-					</div>
-				</div>
-			) : (
-				<div className="bg-white rounded-md">
-					<Empty text={'No Item Found'} />
+										</thead>
+										<tbody>
+											{dashboardInfo.data.map(
+												(
+													item: PaymentList,
+													index: number,
+												) => (
+													<tr
+														className="border border-[#F0F1FF] mb-2"
+														style={{
+															marginBottom:
+																'10px',
+														}}
+														key={index}
+													>
+														<td className="py-2 pl-3">
+															{item.orderId._id}
+														</td>
+														<td className="py-2">
+															<div className="flex items-center gap-4">
+																<Picture
+																	link={
+																		item
+																			.user
+																			.thumbnail
+																			? `/uploads/${item.user.thumbnail}`
+																			: '/uploads/user.png'
+																	}
+																	classList={
+																		'h-[45px] w-[45px] rounded-full'
+																	}
+																	alt={
+																		item
+																			.user
+																			.firstName
+																			? `${item.user.firstName} ${item.user.lastName}`
+																			: item
+																					.user
+																					.userName
+																	}
+																/>
+																<span>
+																	{item.user
+																		.firstName
+																		? `${item.user.firstName} ${item.user.lastName}`
+																		: item
+																				.user
+																				.userName}
+																</span>
+															</div>
+														</td>
+														<td>
+															{new Date(
+																item.createdAt,
+															).toLocaleString(
+																'en-US',
+																{
+																	timeZone:
+																		'UTC',
+																	weekday:
+																		'short',
+																	year: 'numeric',
+																	month: 'short',
+																	day: 'numeric',
+																},
+															)}
+														</td>
+														<td className="capitalize">
+															{item.orderId.total
+																? `$${item.orderId.total.toFixed(
+																		2,
+																  )}`
+																: 0.0}
+														</td>
+														<td className="capitalize text-center">
+															{item.paymentMethod}
+														</td>
+														<td className="text-center capitalize">
+															<span
+																className={`${
+																	item.status ===
+																	'success'
+																		? 'bg-[#D7EDD4] text-[#5E8460]'
+																		: 'bg-[#F3EFD7] text-[#C5B585]'
+																}  text-sm py-1 px-2 rounded-md`}
+															>
+																{item.status}
+															</span>
+														</td>
+													</tr>
+												),
+											)}
+										</tbody>
+									</table>
+								</div>
+							)}
+						</>
+					) : (
+						<Empty text={'Nothing found'} />
+					)}
 				</div>
 			)}
 		</>

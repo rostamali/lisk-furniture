@@ -5,9 +5,6 @@ import Order from '../models/ordermodel';
 import Product from '../models/productmodel';
 import Payment from '../models/paymentmodel';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-export const getInvoice = CatchAsync(
-	async (req: NextApiRequestExtended, res: NextApiResponse) => {},
-);
 export const stripePayment = CatchAsync(
 	async (req: NextApiRequestExtended, res: NextApiResponse) => {
 		const { amount, id, orderInfo } = req.body;
@@ -113,31 +110,33 @@ export const orderDetails = CatchAsync(
 export const updateOrderStatus = CatchAsync(
 	async (req: NextApiRequestExtended, res: NextApiResponse) => {
 		const { id } = req.params;
-		const order = await Order.findById(id);
+		const { status } = req.body;
+		const order = await Order.findByIdAndUpdate(id, {
+			status,
+		});
 		if (!order) throw new Error('Invalid order number!');
-		if (order.status === 'processing') {
-			order.status = 'packed';
-			await order.save();
-			res.status(200).json({
-				status: 'success',
-				data: 'Order status updated',
-			});
-		}
-		if (order.status === 'packed') {
-			order.status = 'shipped';
-			await order.save();
-			res.status(200).json({
-				status: 'success',
-				data: 'Order status updated',
-			});
-		}
-		if (order.status === 'shipped') {
-			order.status = 'delivered';
-			await order.save();
-			res.status(200).json({
-				status: 'success',
-				data: 'Order status updated',
-			});
-		}
+		res.status(200).json({
+			status: 'success',
+			message: 'Order status updated',
+		});
+	},
+);
+export const orderList = CatchAsync(
+	async (req: NextApiRequestExtended, res: NextApiResponse) => {
+		const { limit = 9, page = 1 } = req.query;
+		const skip =
+			(parseInt(page as string, 10) - 1) * parseInt(limit as string, 10);
+		const orders = await Order.find({})
+			.select('_id status qty total email createdAt')
+			.sort('-createdAt')
+			.skip(skip)
+			.limit(parseInt(limit as string, 10));
+		const totalPost = await Order.countDocuments({});
+		res.status(200).json({
+			status: 'success',
+			orders,
+			pages: Math.ceil(totalPost / parseInt(limit as string, 10)),
+			currentPage: parseInt(page as string),
+		});
 	},
 );

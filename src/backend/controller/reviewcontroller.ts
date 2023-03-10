@@ -8,24 +8,25 @@ import { NextApiRequestExtended } from 'src/types';
 
 export const createReview = CatchAsync(
 	async (req: NextApiRequestExtended, res: NextApiResponse) => {
-		const { name, review, rating, productId } = req.body;
+		const { review, rating, id } = req.body;
 		const order = await Order.find({
-			ordersItems: { $elemMatch: { product: req.body.productId } },
-		});
-		if (order.length === 0)
-			throw new Error(`Product is not exist in your order list`);
-		const newReview = await Review.create({
-			name,
+			ordersItems: { $elemMatch: { id: req.body.id } },
 			user: req.user._id,
-			thumbnail: req.user.thumbnail,
-			product: productId,
+		});
+		if (order.length === 0) throw new Error(`You don't have a permission`);
+		const newReview = await Review.create({
+			user: req.user._id,
+			product: id,
 			review,
 			rating,
 		});
-		const product = await Product.findById(productId);
-		product.review.push(newReview._id);
-		await product.save();
-		if (!newReview) throw new Error('Oops, Please try again');
+		const product = await Product.findOneAndUpdate(
+			{ _id: id },
+			{
+				$push: { review: newReview._id },
+			},
+		);
+		if (!product) throw new Error('Oops, Please try again');
 		res.status(200).json({
 			status: 'success',
 			message: 'Review submitted for approval',

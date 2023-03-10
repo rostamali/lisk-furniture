@@ -2,13 +2,12 @@ import CustomPagination from 'src/components/common/shared/CustomPagination';
 import UserAuthLayout from 'src/components/layouts/UserAuthLayout';
 import { ReactElement, useState } from 'react';
 import { HiEye } from 'react-icons/hi';
-import { FaDownload } from 'react-icons/fa';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useFetchData } from 'src/hooks/useApi';
 import { OrderType } from 'src/types';
 import Spinner from 'src/components/common/shared/Spinner';
-import { MdOutlineHourglassEmpty } from 'react-icons/md';
+import { MdOutlineHourglassEmpty, MdRateReview } from 'react-icons/md';
 
 const Orders = () => {
 	const [page, setPage] = useState(1);
@@ -18,6 +17,7 @@ const Orders = () => {
 		'userorders',
 		1,
 	);
+
 	return (
 		<>
 			<Head>
@@ -34,7 +34,7 @@ const Orders = () => {
 			</Head>
 
 			{isLoading ? (
-				''
+				<Spinner />
 			) : orders.status === 'success' ? (
 				orders.data.length > 0 ? (
 					<div className="user-orders">
@@ -81,9 +81,6 @@ const Orders = () => {
 													>
 														<HiEye className="text-[#000] text-base" />
 													</Link>
-													<button className="action__delete">
-														<FaDownload className="text-[#000] text-base" />
-													</button>
 												</div>
 											</td>
 										</tr>
@@ -112,8 +109,13 @@ const Orders = () => {
 					</div>
 				)
 			) : (
-				<div className="flex items-center justify-center h-[450px]">
-					<Spinner />
+				<div className="h-[60vh] w-full flex flex-col items-center gap-6 justify-center">
+					<div className="bg-orange-dark h-14 w-14 rounded-full flex items-center justify-center">
+						<MdOutlineHourglassEmpty className="text-3xl text-[#fff] animate-spin" />
+					</div>
+					<h4 className="text-2xl font-semibold text-center capitalize">
+						No order found...
+					</h4>
 				</div>
 			)}
 		</>
