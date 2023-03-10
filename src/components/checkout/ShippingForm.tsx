@@ -6,7 +6,6 @@ import {
 	selectProvince,
 } from '../../redux/slices/shippingFormSlice';
 import { handleTotalCost } from '../../redux/slices/cartSlice';
-import InputField from '../common/shared/InputField';
 import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { useEffect } from 'react';

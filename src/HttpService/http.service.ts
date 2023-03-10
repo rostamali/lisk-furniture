@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 const axiosConfig: AxiosRequestConfig = {
-	baseURL: process.env.BASE_URL,
+	baseURL: process.env.MY_DOMAIN,
 	timeout: 25000,
 	headers: {
 		'Access-Control-Allow-Origin': '*',

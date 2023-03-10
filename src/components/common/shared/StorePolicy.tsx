@@ -14,7 +14,7 @@ const StorePolicy = () => {
 								<Picture
 									link={item.icon}
 									alt={item.title}
-									classList={'md:h-8 sm:h-8 h-7 w-12 md:w-16'}
+									classList={'sm:w-[60px] w-[80px] h-auto'}
 								/>
 
 								<div className="">

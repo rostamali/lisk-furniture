@@ -12,7 +12,7 @@ const CheckoutBody = dynamic(
 	},
 );
 
-const stripePromise = loadStripe(process.env.STRIPE_PUBLISH_KEY);
+const stripePromise = loadStripe(`${process.env.STRIPE_PUBLISH_KEY}`);
 
 const Checkout = () => {
 	return (

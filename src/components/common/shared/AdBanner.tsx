@@ -21,9 +21,7 @@ const AdBanner = () => {
 											<Picture
 												link={`/assets/ad-banner-1.png`}
 												alt={'Feature product'}
-												classList={
-													'lg:h-36 sm:w-[70%] md:w-[80%] sm:h-20 h-28 w-[60%]'
-												}
+												classList={'md:w-[80%] w-[60%]'}
 											/>
 										</div>
 									</div>
